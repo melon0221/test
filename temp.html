@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🥦 Timer</title>
+    <title>🥦Timer</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,86 +12,40 @@
             align-items: center;
             flex-direction: column;
             height: 100vh;
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #121212; /* 深色背景 */
+            color: #ffffff; /* 浅色文字 */
             margin: 0;
-            padding: 10px;
         }
-
         .current-time {
-            font-size: 4vw; /* 字体大小根据屏幕宽度调整 */
-            font-weight: bold;
+            font-size: 28px; /* 增大字体 */
+            font-weight: bold; /* 加粗 */
             margin-bottom: 20px;
-            text-align: center;
         }
-
         .timer {
-            font-size: 8vw; /* 字体大小根据屏幕宽度调整 */
+            font-size: 48px;
             font-weight: bold;
-            background-color: #333;
-            color: #fff;
+            background-color: #333; /* 深色背景 */
+            color: #fff; /* 浅色文字 */
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 20px;
-            text-align: center;
         }
-
-        .controls {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
         .controls button {
-            font-size: 2.5vw;
-            padding: 12px 20px;
+            font-size: 18px;
+            padding: 10px 20px;
             margin: 5px;
             cursor: pointer;
             border-radius: 5px;
             border: none;
-            background-color: #444;
+            background-color: #444; /* 深色按钮背景 */
             color: #fff;
             transition: background-color 0.3s ease;
         }
-
         .controls button:hover {
-            background-color: #555;
+            background-color: #555; /* 按钮悬停效果 */
         }
-
         .controls button:active {
-            background-color: #666;
-        }
-
-        /* 针对较小屏幕的优化 */
-        @media (max-width: 600px) {
-            .current-time {
-                font-size: 5vw; /* 小屏幕下字体稍微减小 */
-            }
-
-            .timer {
-                font-size: 10vw; /* 小屏幕下字体稍微减小 */
-            }
-
-            .controls button {
-                font-size: 3.5vw; /* 小屏幕下按钮文字适当调整 */
-            }
-        }
-
-        /* 针对较大屏幕的优化 */
-        @media (min-width: 1200px) {
-            .current-time {
-                font-size: 2.5rem;
-            }
-
-            .timer {
-                font-size: 4rem;
-            }
-
-            .controls button {
-                font-size: 1.5rem;
-            }
+            background-color: #666; /* 按钮点击效果 */
         }
     </style>
 </head>
@@ -113,6 +67,19 @@
         let timerInterval;
         let currentTimeInterval;
 
+        // 检查 localStorage 中是否有之前的计时器数据
+        if (localStorage.getItem('timerData')) {
+            const { storedHours, storedMinutes, storedSeconds, running } = JSON.parse(localStorage.getItem('timerData'));
+            hours = storedHours;
+            minutes = storedMinutes;
+            seconds = storedSeconds;
+            isRunning = running;
+
+            if (isRunning) {
+                startTimer();
+            }
+        }
+
         function updateTime() {
             seconds++;
             if (seconds === 60) {
@@ -129,6 +96,14 @@
             const displayHours = hours < 10 ? '0' + hours : hours;
 
             document.getElementById('timer').textContent = `${displayHours}:${displayMinutes}:${displaySeconds}`;
+            
+            // 每秒保存当前计时状态到 localStorage
+            localStorage.setItem('timerData', JSON.stringify({
+                storedHours: hours,
+                storedMinutes: minutes,
+                storedSeconds: seconds,
+                running: isRunning
+            }));
         }
 
         function startTimer() {
@@ -146,6 +121,13 @@
                 isRunning = false;
                 document.getElementById('startBtn').disabled = false;
                 document.getElementById('stopBtn').disabled = true;
+                // 停止时也更新 localStorage 状态
+                localStorage.setItem('timerData', JSON.stringify({
+                    storedHours: hours,
+                    storedMinutes: minutes,
+                    storedSeconds: seconds,
+                    running: isRunning
+                }));
             }
         }
 
@@ -158,13 +140,14 @@
             document.getElementById('timer').textContent = '00:00:00';
             document.getElementById('startBtn').disabled = false;
             document.getElementById('stopBtn').disabled = true;
+            localStorage.removeItem('timerData'); // 重置时清除 localStorage
         }
 
         // 更新当前时间
         function updateCurrentTime() {
             const now = new Date();
             const year = now.getFullYear();
-            const month = now.getMonth() + 1;
+            const month = now.getMonth() + 1; // 月份从0开始
             const day = now.getDate();
             const hours = now.getHours();
             const minutes = now.getMinutes();
