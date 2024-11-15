@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥦 Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 10px;
+        }
+
+        .current-time {
+            font-size: 4vw; /* 字体大小根据屏幕宽度调整 */
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .timer {
+            font-size: 8vw; /* 字体大小根据屏幕宽度调整 */
+            font-weight: bold;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .controls button {
+            font-size: 2.5vw;
+            padding: 12px 20px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #444;
+            color: #fff;
+            transition: background-color 0.3s ease;
+        }
+
+        .controls button:hover {
+            background-color: #555;
+        }
+
+        .controls button:active {
+            background-color: #666;
+        }
+
+        /* 针对较小屏幕的优化 */
+        @media (max-width: 600px) {
+            .current-time {
+                font-size: 5vw; /* 小屏幕下字体稍微减小 */
+            }
+
+            .timer {
+                font-size: 10vw; /* 小屏幕下字体稍微减小 */
+            }
+
+            .controls button {
+                font-size: 3.5vw; /* 小屏幕下按钮文字适当调整 */
+            }
+        }
+
+        /* 针对较大屏幕的优化 */
+        @media (min-width: 1200px) {
+            .current-time {
+                font-size: 2.5rem;
+            }
+
+            .timer {
+                font-size: 4rem;
+            }
+
+            .controls button {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="current-time" id="current-time">Current Time</div>
+    <div class="timer" id="timer">00:00:00</div>
+    <div class="controls">
+        <button id="startBtn">Start</button>
+        <button id="stopBtn">Stop</button>
+        <button id="resetBtn">Reset</button>
+    </div>
+
+    <script>
+        let seconds = 0;
+        let minutes = 0;
+        let hours = 0;
+        let isRunning = false;
+        let timerInterval;
+        let currentTimeInterval;
+
+        function updateTime() {
+            seconds++;
+            if (seconds === 60) {
+                seconds = 0;
+                minutes++;
+                if (minutes === 60) {
+                    minutes = 0;
+                    hours++;
+                }
+            }
+
+            const displaySeconds = seconds < 10 ? '0' + seconds : seconds;
+            const displayMinutes = minutes < 10 ? '0' + minutes : minutes;
+            const displayHours = hours < 10 ? '0' + hours : hours;
+
+            document.getElementById('timer').textContent = `${displayHours}:${displayMinutes}:${displaySeconds}`;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                timerInterval = setInterval(updateTime, 1000);
+                isRunning = true;
+                document.getElementById('startBtn').disabled = true;
+                document.getElementById('stopBtn').disabled = false;
+            }
+        }
+
+        function stopTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                document.getElementById('startBtn').disabled = false;
+                document.getElementById('stopBtn').disabled = true;
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+            document.getElementById('timer').textContent = '00:00:00';
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+        }
+
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            const displayTime = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day} 
+                                 ${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+            document.getElementById('current-time').textContent = `${displayTime}`;
+        }
+
+        // 每秒更新当前时间
+        currentTimeInterval = setInterval(updateCurrentTime, 1000);
+
+        document.getElementById('startBtn').addEventListener('click', startTimer);
+        document.getElementById('stopBtn').addEventListener('click', stopTimer);
+        document.getElementById('resetBtn').addEventListener('click', resetTimer);
+    </script>
+
+</body>
+</html>
