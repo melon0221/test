@@ -93,7 +93,7 @@
     <script>
         let totalDraws = 0;
         const counts = { ssr: 0, sr: 0, hr: 0, other: 0 };
-        let cardPool = [];
+        let cardPool = {};
 
         // 加载卡池数据
         fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json')
@@ -107,7 +107,7 @@
 
         // 抽卡函数
         function drawCard() {
-            if (cardPool.length === 0) {
+            if (Object.keys(cardPool).length === 0) {
                 alert('卡池数据未加载完成，请稍后再试。');
                 return;
             }
@@ -115,17 +115,25 @@
             const random = Math.random() * 100;
             let cumulative = 0;
 
-            for (let card of cardPool) {
+            // 随机选择一个稀有度
+            const rarities = Object.keys(cardPool);
+            const rarity = rarities[Math.floor(Math.random() * rarities.length)];
+
+            // 获取该稀有度下的卡池
+            const rarityPool = cardPool[rarity];
+
+            // 根据概率选中一张卡牌
+            for (let card of rarityPool) {
                 cumulative += card.probability;
                 if (random <= cumulative) {
-                    displayCard(card.name, card.rarity);
-                    updateStats(card.rarity);
+                    displayCard(card.name, rarity);
+                    updateStats(rarity);
                     break;
                 }
             }
         }
 
-        // 显示卡片
+        // 显示抽中的卡片
         function displayCard(name, rarity) {
             const cardDisplay = document.getElementById("cardDisplay");
             cardDisplay.innerHTML = `
