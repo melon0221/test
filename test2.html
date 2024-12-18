@@ -176,16 +176,22 @@
         const counts = { ssr: 0, sr: 0, hr: 0, other: 0 };
         let cardPool = {};
 
-        // 加载卡池数据
-        fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json')
-            .then(response => response.json())
-            .then(data => {
-                cardPool = data;
-                document.getElementById("drawButton").disabled = false; // 数据加载完成后启用抽卡按钮
-            })
-            .catch(error => {
-                console.error('无法加载卡池数据:', error);
-            });
+        // 加载卡池数据并缓存
+        if (!localStorage.getItem('cardPool')) {
+            fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json')
+                .then(response => response.json())
+                .then(data => {
+                    cardPool = data;
+                    localStorage.setItem('cardPool', JSON.stringify(cardPool));
+                    document.getElementById("drawButton").disabled = false; // 数据加载完成后启用抽卡按钮
+                })
+                .catch(error => {
+                    console.error('无法加载卡池数据:', error);
+                });
+        } else {
+            cardPool = JSON.parse(localStorage.getItem('cardPool'));
+            document.getElementById("drawButton").disabled = false; // 从缓存加载数据
+        }
 
         // 抽卡函数
         function drawCard() {
@@ -197,14 +203,11 @@
             const random = Math.random() * 100;
             let cumulative = 0;
 
-            // 随机选择一个稀有度
             const rarities = Object.keys(cardPool);
             const rarity = rarities[Math.floor(Math.random() * rarities.length)];
 
-            // 获取该稀有度下的卡池
             const rarityPool = cardPool[rarity];
 
-            // 根据概率选中一张卡牌
             for (let card of rarityPool) {
                 cumulative += card.probability;
                 if (random <= cumulative) {
@@ -226,7 +229,6 @@
             // 清除上一次的特效
             cardDisplay.classList.remove("ssrEffect", "srEffect", "hrEffect");
 
-            // 根据稀有度添加不同的特效
             if (rarity === "ssr") {
                 cardDisplay.classList.add("ssrEffect");
             } else if (rarity === "sr") {
