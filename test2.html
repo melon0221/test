@@ -111,6 +111,23 @@
             transform: translateY(-5px);
         }
 
+        /* Loading Spinner */
+        #loadingSpinner {
+            display: none;
+            border: 16px solid #f3f3f3;
+            border-top: 16px solid #ffcc00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin: 30px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         /* 特效动画 */
         @keyframes glowEffect {
             0% { box-shadow: 0 0 10px 2px rgba(255, 204, 0, 0.8); }
@@ -157,11 +174,16 @@
 </head>
 <body>
     <h1>像素风抽卡系统</h1>
+    
+    <div id="loadingSpinner"></div>
+
     <div class="card" id="cardDisplay">
         <h2>点击抽卡！</h2>
         <p>稀有度：--</p>
     </div>
+
     <button id="drawButton" disabled>抽卡</button>
+
     <div class="stats">
         <p>总抽卡次数：<span id="totalDraws">0</span></p>
         <p>SSR 获得次数：<span id="ssrCount">0</span></p>
@@ -169,6 +191,7 @@
         <p>HR 获得次数：<span id="hrCount">0</span></p>
         <p>其他稀有度：<span id="otherCount">0</span></p>
     </div>
+
     <button class="reset-btn" id="resetButton">重启人生</button>
 
     <script>
@@ -176,21 +199,38 @@
         const counts = { ssr: 0, sr: 0, hr: 0, other: 0 };
         let cardPool = {};
 
+        // 显示加载中信息
+        function showLoading() {
+            const spinner = document.getElementById('loadingSpinner');
+            spinner.style.display = 'block';  // 显示spinner
+        }
+
+        function hideLoading() {
+            const spinner = document.getElementById('loadingSpinner');
+            spinner.style.display = 'none';  // 隐藏spinner
+        }
+
         // 加载卡池数据并缓存
         if (!localStorage.getItem('cardPool')) {
+            showLoading();
             fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json')
                 .then(response => response.json())
                 .then(data => {
                     cardPool = data;
                     localStorage.setItem('cardPool', JSON.stringify(cardPool));
                     document.getElementById("drawButton").disabled = false; // 数据加载完成后启用抽卡按钮
+                    document.getElementById("cardDisplay").innerHTML = "<h2>点击抽卡！</h2><p>稀有度：--</p>";
+                    hideLoading();
                 })
                 .catch(error => {
                     console.error('无法加载卡池数据:', error);
+                    alert("卡池数据加载失败，请稍后再试。");
+                    hideLoading();
                 });
         } else {
             cardPool = JSON.parse(localStorage.getItem('cardPool'));
             document.getElementById("drawButton").disabled = false; // 从缓存加载数据
+            document.getElementById("cardDisplay").innerHTML = "<h2>点击抽卡！</h2><p>稀有度：--</p>";
         }
 
         // 抽卡函数
