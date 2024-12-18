@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -93,6 +93,50 @@
             background-color: #444;
             border-color: #888;
         }
+
+        .stats {
+            width: 80%;
+            margin: 20px auto;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            background-color: #333;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            font-size: 12px;
+        }
+
+        .stats table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ffcc00;
+        }
+
+        .stats th, .stats td {
+            border: 1px solid #ffcc00;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .stats th {
+            background-color: #444;
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 14px;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            background-color: #444;
+            color: #ffcc00;
+            cursor: pointer;
+            text-shadow: 1px 1px #000;
+        }
+
+        .reset-btn:hover {
+            background-color: #555;
+            color: #fff;
+        }
     </style>
 </head>
 <body>
@@ -103,16 +147,71 @@
     </div>
     <button onclick="drawCard()">抽卡</button>
 
+    <div class="stats" id="stats">
+        <table>
+            <thead>
+                <tr>
+                    <th>统计项目</th>
+                    <th>次数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>总抽卡次数</td>
+                    <td id="totalDraws">0</td>
+                </tr>
+                <tr>
+                    <td>SSR 获得次数</td>
+                    <td id="ssrCount">0</td>
+                </tr>
+                <tr>
+                    <td>SR 获得次数</td>
+                    <td id="srCount">0</td>
+                </tr>
+                <tr>
+                    <td>HR 获得次数</td>
+                    <td id="hrCount">0</td>
+                </tr>
+                <tr>
+                    <td>R 获得次数</td>
+                    <td id="rCount">0</td>
+                </tr>
+                <tr>
+                    <td>其他 获得次数</td>
+                    <td id="othersCount">0</td>
+                </tr>
+                <tr>
+                    <td>SR 及以上获得次数占比</td>
+                    <td id="srPercentage">0%</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <button class="reset-btn" onclick="resetStats()">重启人生</button>
+
     <script>
         let cardPool = [];
         let probabilities = [];
+        let totalDraws = 0;
+        const rarityCounts = {
+            ssr: 0,
+            sr: 0,
+            hr: 0,
+            r: 0,
+            others: 0
+        };
 
         // 从外部链接加载卡池内容
         async function loadCardPool() {
-            const response = await fetch("https://melon0221.github.io/test/card");
-            const data = await response.json();
-            cardPool = data.cards;
-            probabilities = data.probabilities;
+            try {
+                const response = await fetch("https://melon0221.github.io/test/card");
+                const data = await response.json();
+                cardPool = data.cards;
+                probabilities = data.probabilities;
+            } catch (error) {
+                console.error("无法加载卡池内容：", error);
+            }
         }
 
         // 根据概率随机抽卡
@@ -124,6 +223,7 @@
                 if (random < cumulative) {
                     const card = cardPool[i];
                     displayCard(card.name, card.rarity);
+                    updateStats(card.rarity);
                     return;
                 }
             }
@@ -139,10 +239,44 @@
             cardElement.className = `card ${rarity}`;
         }
 
+        // 更新统计数据
+        function updateStats(rarity) {
+            totalDraws++;
+            rarityCounts[rarity]++;
+            document.getElementById("totalDraws").textContent = totalDraws;
+            document.getElementById("ssrCount").textContent = rarityCounts["ssr"];
+            document.getElementById("srCount").textContent = rarityCounts["sr"];
+            document.getElementById("hrCount").textContent = rarityCounts["hr"];
+            document.getElementById("rCount").textContent = rarityCounts["r"];
+            document.getElementById("othersCount").textContent = rarityCounts["others"];
+
+            // 计算 SR 及以上卡片的百分比
+            const srAndAbove = rarityCounts["ssr"] + rarityCounts["sr"];
+            const percentage = (srAndAbove / totalDraws * 100).toFixed(2);
+            document.getElementById("srPercentage").textContent = `${percentage}%`;
+        }
+
+        // 重置统计数据
+        function resetStats() {
+            totalDraws = 0;
+            rarityCounts.ssr = 0;
+            rarityCounts.sr = 0;
+            rarityCounts.hr = 0;
+            rarityCounts.r = 0;
+            rarityCounts.others = 0;
+
+            // 更新显示为初始状态
+            document.getElementById("totalDraws").textContent = totalDraws;
+            document.getElementById("ssrCount").textContent = rarityCounts["ssr"];
+            document.getElementById("srCount").textContent = rarityCounts["sr"];
+            document.getElementById("hrCount").textContent = rarityCounts["hr"];
+            document.getElementById("rCount").textContent = rarityCounts["r"];
+            document.getElementById("othersCount").textContent = rarityCounts["others"];
+            document.getElementById("srPercentage").textContent = `0%`;
+        }
+
         // 页面加载时初始化卡池
-        loadCardPool().catch(error => {
-            console.error("无法加载卡池内容：", error);
-        });
+        loadCardPool();
     </script>
 </body>
 </html>
