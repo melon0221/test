@@ -145,7 +145,7 @@
         <h2>点击抽卡！</h2>
         <p>稀有度：--</p>
     </div>
-    <button onclick="drawCard()">抽卡</button>
+    <button id="drawButton">抽卡</button>
 
     <div class="stats" id="stats">
         <table>
@@ -209,7 +209,7 @@
                 const data = await response.json();
                 cardPool = data.cards;
                 probabilities = data.probabilities;
-                console.log(cardPool);  // Debugging line
+                console.log("卡池已加载:", cardPool, probabilities);  // 调试输出
             } catch (error) {
                 console.error("无法加载卡池内容：", error);
             }
@@ -278,6 +278,12 @@
 
         // 页面加载时初始化卡池
         loadCardPool();
+
+        // 为抽卡按钮添加点击事件
+        document.getElementById("drawButton").addEventListener("click", function() {
+            console.log("点击了抽卡按钮");  // 调试输出
+            drawCard();
+        });
     </script>
 </body>
 </html>
