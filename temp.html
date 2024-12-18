@@ -74,7 +74,7 @@
             border-color: #ff0000;
         }
 
-        .card.sr {
+        .card.sr1 {
             background-color: #005700;
             border-color: #00ff00;
         }
@@ -165,8 +165,8 @@
                     <td id="ssrCount">0</td>
                 </tr>
                 <tr>
-                    <td>SR 获得次数</td>
-                    <td id="srCount">0</td>
+                    <td>SR1 获得次数</td>
+                    <td id="sr1Count">0</td>
                 </tr>
                 <tr>
                     <td>HR 获得次数</td>
@@ -177,7 +177,7 @@
                     <td id="rCount">0</td>
                 </tr>
                 <tr>
-                    <td>其他 获得次数</td>
+                    <td>Others 获得次数</td>
                     <td id="othersCount">0</td>
                 </tr>
                 <tr>
@@ -196,7 +196,7 @@
         let totalDraws = 0;
         const rarityCounts = {
             ssr: 0,
-            sr: 0,
+            sr1: 0,
             hr: 0,
             r: 0,
             others: 0
@@ -209,6 +209,7 @@
                 const data = await response.json();
                 cardPool = data.cards;
                 probabilities = data.probabilities;
+                console.log(cardPool);  // Debugging line
             } catch (error) {
                 console.error("无法加载卡池内容：", error);
             }
@@ -245,13 +246,13 @@
             rarityCounts[rarity]++;
             document.getElementById("totalDraws").textContent = totalDraws;
             document.getElementById("ssrCount").textContent = rarityCounts["ssr"];
-            document.getElementById("srCount").textContent = rarityCounts["sr"];
+            document.getElementById("sr1Count").textContent = rarityCounts["sr1"];
             document.getElementById("hrCount").textContent = rarityCounts["hr"];
             document.getElementById("rCount").textContent = rarityCounts["r"];
             document.getElementById("othersCount").textContent = rarityCounts["others"];
 
             // 计算 SR 及以上卡片的百分比
-            const srAndAbove = rarityCounts["ssr"] + rarityCounts["sr"];
+            const srAndAbove = rarityCounts["ssr"] + rarityCounts["sr1"];
             const percentage = (srAndAbove / totalDraws * 100).toFixed(2);
             document.getElementById("srPercentage").textContent = `${percentage}%`;
         }
@@ -260,7 +261,7 @@
         function resetStats() {
             totalDraws = 0;
             rarityCounts.ssr = 0;
-            rarityCounts.sr = 0;
+            rarityCounts.sr1 = 0;
             rarityCounts.hr = 0;
             rarityCounts.r = 0;
             rarityCounts.others = 0;
@@ -268,7 +269,7 @@
             // 更新显示为初始状态
             document.getElementById("totalDraws").textContent = totalDraws;
             document.getElementById("ssrCount").textContent = rarityCounts["ssr"];
-            document.getElementById("srCount").textContent = rarityCounts["sr"];
+            document.getElementById("sr1Count").textContent = rarityCounts["sr1"];
             document.getElementById("hrCount").textContent = rarityCounts["hr"];
             document.getElementById("rCount").textContent = rarityCounts["r"];
             document.getElementById("othersCount").textContent = rarityCounts["others"];
