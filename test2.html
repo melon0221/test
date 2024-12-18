@@ -161,7 +161,7 @@
         <h2>点击抽卡！</h2>
         <p>稀有度：--</p>
     </div>
-    <button id="drawButton">抽卡</button>
+    <button id="drawButton" disabled>抽卡</button>
     <div class="stats">
         <p>总抽卡次数：<span id="totalDraws">0</span></p>
         <p>SSR 获得次数：<span id="ssrCount">0</span></p>
@@ -181,6 +181,7 @@
             .then(response => response.json())
             .then(data => {
                 cardPool = data;
+                document.getElementById("drawButton").disabled = false; // 数据加载完成后启用抽卡按钮
             })
             .catch(error => {
                 console.error('无法加载卡池数据:', error);
