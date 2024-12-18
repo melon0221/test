@@ -5,7 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>像素风抽卡系统</title>
     <style>
-        /* 样式代码省略 */
+        /* 像素风格 CSS */
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            text-align: center;
+            background-color: #1e1e1e;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            color: #ffcc00;
+            margin-top: 20px;
+            text-shadow: 2px 2px #000;
+        }
+
+        .card {
+            width: 240px;
+            height: 360px;
+            margin: 30px auto;
+            border: 4px solid #ffcc00;
+            border-radius: 8px;
+            background-color: #333;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card h2, .card p {
+            margin: 0;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            color: #ffffff;
+        }
+
+        .card p {
+            font-size: 16px;
+            color: #ffcc00;
+        }
+
+        button {
+            font-family: 'Press Start 2P', cursive;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #444;
+            color: #ffcc00;
+            border: 2px solid #ffcc00;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .stats {
+            margin: 20px auto;
+            width: 80%;
+            border: 2px solid #ffcc00;
+            padding: 10px;
+            background-color: #333;
+        }
+
+        .reset-btn {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -15,32 +81,45 @@
         <p>稀有度：--</p>
     </div>
     <button id="drawButton">抽卡</button>
-    <script>
-        let cardPool = [];
-        let probabilities = [];
+    <div class="stats">
+        <p>总抽卡次数：<span id="totalDraws">0</span></p>
+        <p>SSR 获得次数：<span id="ssrCount">0</span></p>
+        <p>SR 获得次数：<span id="srCount">0</span></p>
+        <p>HR 获得次数：<span id="hrCount">0</span></p>
+        <p>其他稀有度：<span id="otherCount">0</span></p>
+    </div>
+    <button class="reset-btn" id="resetButton">重启人生</button>
 
-        // 动态加载 JSON 卡池数据
-        async function loadCardData() {
-            const response = await fetch("https://raw.githubusercontent.com/melon0221/test/main/card.json"); // 获取原始 JSON 文件
-            const data = await response.json();  // 解析 JSON 数据
-            cardPool = data.cards;
-            probabilities = data.probabilities;
-            console.log("卡池加载完成：", cardPool);
-        }
+    <script>
+        let totalDraws = 0;
+        const counts = { ssr: 0, sr: 0, hr: 0, other: 0 };
+        let cardPool = [];
+
+        // 加载卡池数据
+        fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json')
+            .then(response => response.json())
+            .then(data => {
+                cardPool = data;
+            })
+            .catch(error => {
+                console.error('无法加载卡池数据:', error);
+            });
 
         // 抽卡函数
         function drawCard() {
-            if (!cardPool.length) {
-                alert("卡池尚未加载，请稍后再试！");
+            if (cardPool.length === 0) {
+                alert('卡池数据未加载完成，请稍后再试。');
                 return;
             }
+
             const random = Math.random() * 100;
             let cumulative = 0;
-            for (let i = 0; i < cardPool.length; i++) {
-                cumulative += probabilities[i];
+
+            for (let card of cardPool) {
+                cumulative += card.probability;
                 if (random <= cumulative) {
-                    const card = cardPool[i];
                     displayCard(card.name, card.rarity);
+                    updateStats(card.rarity);
                     break;
                 }
             }
@@ -55,11 +134,32 @@
             `;
         }
 
-        // 绑定事件
-        document.getElementById("drawButton").addEventListener("click", drawCard);
+        // 更新统计数据
+        function updateStats(rarity) {
+            totalDraws++;
+            counts[rarity]++;
+            document.getElementById("totalDraws").textContent = totalDraws;
+            document.getElementById("ssrCount").textContent = counts["ssr"];
+            document.getElementById("srCount").textContent = counts["sr"];
+            document.getElementById("hrCount").textContent = counts["hr"];
+            document.getElementById("otherCount").textContent = counts["other"];
+        }
 
-        // 加载卡池数据
-        loadCardData();
+        // 重置统计数据
+        function resetStats() {
+            totalDraws = 0;
+            counts.ssr = counts.sr = counts.hr = counts.other = 0;
+            document.getElementById("totalDraws").textContent = totalDraws;
+            document.getElementById("ssrCount").textContent = counts["ssr"];
+            document.getElementById("srCount").textContent = counts["sr"];
+            document.getElementById("hrCount").textContent = counts["hr"];
+            document.getElementById("otherCount").textContent = counts["other"];
+            displayCard("点击抽卡！", "--");
+        }
+
+        // 按钮事件绑定
+        document.getElementById("drawButton").addEventListener("click", drawCard);
+        document.getElementById("resetButton").addEventListener("click", resetStats);
     </script>
 </body>
 </html>
