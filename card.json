@@ -1,0 +1,35 @@
+{
+  "cards": [
+    { "name": "SSR", "rarity": "ssr" },
+    { "name": "SR1", "rarity": "sr1" },
+    { "name": "HR", "rarity": "hr" },
+    { "name": "R", "rarity": "r" },
+    { "name": "Others", "rarity": "others" },
+    { "name": "SR2", "rarity": "sr2" },
+    { "name": "HR2", "rarity": "hr2" },
+    { "name": "R2", "rarity": "r2" },
+    { "name": "R3", "rarity": "r3" },
+    { "name": "Others2", "rarity": "others2" },
+    { "name": "Others3", "rarity": "others3" },
+    { "name": "Others4", "rarity": "others4" },
+    { "name": "Others5", "rarity": "others5" },
+    { "name": "Others6", "rarity": "others6" }
+  ],
+  "probabilities": [
+    0.1,  // SSR
+    1.0,  // SR1
+    5.0,  // HR
+    25.0, // R
+    75.0, // Others
+    1.0,  // SR2
+    5.0,  // HR2
+    25.0, // R2
+    25.0, // R3
+    75.0, // Others
+    75.0, // Others2
+    75.0, // Others3
+    75.0, // Others4
+    75.0, // Others5
+    75.0  // Others6
+  ]
+}
