@@ -1,35 +1,58 @@
 {
-  "cards": [
-    { "name": "SSR", "rarity": "ssr" },
-    { "name": "SR1", "rarity": "sr1" },
-    { "name": "HR", "rarity": "hr" },
-    { "name": "R", "rarity": "r" },
-    { "name": "Others", "rarity": "others" },
-    { "name": "SR2", "rarity": "sr2" },
-    { "name": "HR2", "rarity": "hr2" },
-    { "name": "R2", "rarity": "r2" },
-    { "name": "R3", "rarity": "r3" },
-    { "name": "Others2", "rarity": "others2" },
-    { "name": "Others3", "rarity": "others3" },
-    { "name": "Others4", "rarity": "others4" },
-    { "name": "Others5", "rarity": "others5" },
-    { "name": "Others6", "rarity": "others6" }
-  ],
-  "probabilities": [
-    0.1,  // SSR
-    1.0,  // SR1
-    5.0,  // HR
-    25.0, // R
-    75.0, // Others
-    1.0,  // SR2
-    5.0,  // HR2
-    25.0, // R2
-    25.0, // R3
-    75.0, // Others
-    75.0, // Others2
-    75.0, // Others3
-    75.0, // Others4
-    75.0, // Others5
-    75.0  // Others6
-  ]
+    "ssr": [
+        {
+            "name": "SSR 卡牌 1",
+            "probability": 0.05
+        },
+        {
+            "name": "SSR 卡牌 2",
+            "probability": 0.03
+        },
+        {
+            "name": "SSR 卡牌 3",
+            "probability": 0.02
+        }
+    ],
+    "sr": [
+        {
+            "name": "SR 卡牌 1",
+            "probability": 0.5
+        },
+        {
+            "name": "SR 卡牌 2",
+            "probability": 0.3
+        },
+        {
+            "name": "SR 卡牌 3",
+            "probability": 0.2
+        }
+    ],
+    "hr": [
+        {
+            "name": "HR 卡牌 1",
+            "probability": 2
+        },
+        {
+            "name": "HR 卡牌 2",
+            "probability": 1.5
+        },
+        {
+            "name": "HR 卡牌 3",
+            "probability": 1.5
+        }
+    ],
+    "other": [
+        {
+            "name": "普通卡牌 1",
+            "probability": 31.3
+        },
+        {
+            "name": "普通卡牌 2",
+            "probability": 31.3
+        },
+        {
+            "name": "普通卡牌 3",
+            "probability": 31.3
+        }
+    ]
 }
