@@ -72,22 +72,6 @@
         .reset-btn {
             margin-top: 20px;
         }
-
-        .spinner {
-            display: none;
-            width: 50px;
-            height: 50px;
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #ffcc00;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-top: 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
@@ -97,7 +81,6 @@
         <p>稀有度：--</p>
     </div>
     <button id="drawButton">抽卡</button>
-    <div class="spinner" id="spinner"></div>
     <div class="stats">
         <p>总抽卡次数：<span id="totalDraws">0</span></p>
         <p>SSR 获得次数：<span id="ssrCount">0</span></p>
@@ -112,7 +95,7 @@
         const counts = { ssr: 0, sr: 0, hr: 0, other: 0 };
         let cardPool = [];
 
-        // 从 GitHub 加载卡池 JSON 文件
+        // 预加载卡池数据
         async function loadCardPool() {
             const response = await fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json');
             const data = await response.json();
@@ -122,11 +105,21 @@
                 ...data.hr,
                 ...data.other
             ];
+            console.log("卡池数据加载完成", cardPool);  // 可选：调试输出，检查数据加载是否成功
         }
+
+        // 等待卡池加载完成
+        window.addEventListener('load', async () => {
+            await loadCardPool();
+            console.log('卡池数据已加载，准备好抽卡');
+        });
 
         // 抽卡函数
         function drawCard() {
-            document.getElementById("spinner").style.display = 'inline-block';
+            if (cardPool.length === 0) {
+                alert('卡池数据加载中，请稍等...');
+                return;
+            }
 
             const random = Math.random() * 100;
             let cumulative = 0;
@@ -140,11 +133,8 @@
                 }
             }
 
-            setTimeout(() => {
-                displayCard(drawnCard.name, drawnCard.rarity);
-                updateStats(drawnCard.rarity);
-                document.getElementById("spinner").style.display = 'none';
-            }, 1000);
+            displayCard(drawnCard.name, drawnCard.rarity);
+            updateStats(drawnCard.rarity);
         }
 
         // 显示卡片
@@ -183,8 +173,6 @@
         document.getElementById("drawButton").addEventListener("click", drawCard);
         document.getElementById("resetButton").addEventListener("click", resetStats);
 
-        // 加载卡池数据
-        loadCardPool();
     </script>
 </body>
 </html>
