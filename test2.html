@@ -72,6 +72,11 @@
         .reset-btn {
             margin-top: 20px;
         }
+
+        .loading {
+            font-size: 20px;
+            color: #ffcc00;
+        }
     </style>
 </head>
 <body>
@@ -97,20 +102,28 @@
 
         // 预加载卡池数据
         async function loadCardPool() {
-            const response = await fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json');
-            const data = await response.json();
-            cardPool = [
-                ...data.ssr,
-                ...data.sr,
-                ...data.hr,
-                ...data.other
-            ];
-            console.log("卡池数据加载完成", cardPool);  // 可选：调试输出，检查数据加载是否成功
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json');
+                const data = await response.json();
+                cardPool = [
+                    ...data.ssr,
+                    ...data.sr,
+                    ...data.hr,
+                    ...data.other
+                ];
+                console.log("卡池数据加载完成", cardPool);  // 可选：调试输出，检查数据加载是否成功
+            } catch (error) {
+                console.error("卡池数据加载失败:", error);
+            }
         }
 
         // 等待卡池加载完成
         window.addEventListener('load', async () => {
+            console.log('页面加载完成，开始加载卡池数据...');
             await loadCardPool();
+
+            // 确保卡池数据加载完成后才显示按钮
+            document.getElementById("drawButton").disabled = false;
             console.log('卡池数据已加载，准备好抽卡');
         });
 
@@ -172,7 +185,6 @@
         // 按钮事件绑定
         document.getElementById("drawButton").addEventListener("click", drawCard);
         document.getElementById("resetButton").addEventListener("click", resetStats);
-
     </script>
 </body>
 </html>
