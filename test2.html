@@ -104,7 +104,7 @@
         // 异步加载卡池数据
         async function loadCardPool() {
             try {
-                const response = await fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json');
+                const response = await fetch('https://github.com/username/your-repo/raw/main/card.json');
                 const data = await response.json();
                 cardPool = [
                     ...data.ssr,
