@@ -80,12 +80,12 @@
     </style>
 </head>
 <body>
-    <h1>1测试抽卡系统</h1>
+    <h1>像素风抽卡系统</h1>
     <div class="card" id="cardDisplay">
         <h2>点击抽卡！</h2>
         <p>稀有度：--</p>
     </div>
-    <button id="drawButton">抽卡</button>
+    <button id="drawButton" disabled>抽卡</button>
     <div class="stats">
         <p>总抽卡次数：<span id="totalDraws">0</span></p>
         <p>SSR 获得次数：<span id="ssrCount">0</span></p>
@@ -96,11 +96,12 @@
     <button class="reset-btn" id="resetButton">重启人生</button>
 
     <script>
+        // 初始化统计数据
         let totalDraws = 0;
         const counts = { ssr: 0, sr: 0, hr: 0, other: 0 };
         let cardPool = [];
 
-        // 预加载卡池数据
+        // 异步加载卡池数据
         async function loadCardPool() {
             try {
                 const response = await fetch('https://raw.githubusercontent.com/melon0221/test/main/card.json');
@@ -111,8 +112,8 @@
                     ...data.hr,
                     ...data.other
                 ];
-                console.log("卡池数据加载完成", cardPool);  // 可选：调试输出，检查数据加载是否成功
-                enableDrawButton();  // 卡池加载完成后启用“抽卡”按钮
+                console.log("卡池数据加载完成", cardPool);
+                enableDrawButton();  // 启用抽卡按钮
             } catch (error) {
                 console.error("卡池数据加载失败:", error);
             }
@@ -123,10 +124,10 @@
             document.getElementById("drawButton").disabled = false;
         }
 
-        // 等待卡池加载完成
-        window.addEventListener('load', async () => {
+        // 等待卡池数据加载完成
+        window.addEventListener('load', () => {
             console.log('页面加载完成，开始加载卡池数据...');
-            await loadCardPool();
+            loadCardPool();
         });
 
         // 抽卡函数
