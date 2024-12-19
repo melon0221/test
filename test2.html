@@ -80,7 +80,7 @@
     </style>
 </head>
 <body>
-    <h1>像素风抽卡系统</h1>
+    <h1>1测试抽卡系统</h1>
     <div class="card" id="cardDisplay">
         <h2>点击抽卡！</h2>
         <p>稀有度：--</p>
@@ -112,19 +112,21 @@
                     ...data.other
                 ];
                 console.log("卡池数据加载完成", cardPool);  // 可选：调试输出，检查数据加载是否成功
+                enableDrawButton();  // 卡池加载完成后启用“抽卡”按钮
             } catch (error) {
                 console.error("卡池数据加载失败:", error);
             }
+        }
+
+        // 启用“抽卡”按钮
+        function enableDrawButton() {
+            document.getElementById("drawButton").disabled = false;
         }
 
         // 等待卡池加载完成
         window.addEventListener('load', async () => {
             console.log('页面加载完成，开始加载卡池数据...');
             await loadCardPool();
-
-            // 确保卡池数据加载完成后才显示按钮
-            document.getElementById("drawButton").disabled = false;
-            console.log('卡池数据已加载，准备好抽卡');
         });
 
         // 抽卡函数
