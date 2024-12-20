@@ -19,10 +19,10 @@
         }
 
         h1 {
-            color: #d4af7f; /* 明亮的金色标题 */
-            font-size: 3em;
-            margin-top: 20px;
-            text-shadow: 2px 2px #000;
+            color: #ffd700; /* 金色字体 */
+            font-size: 4em; /* 增加字体大小 */
+            margin-top: 50px; /* 增加顶部间距 */
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.7), 0 0 25px #ffd700, 0 0 5px #ffd700; /* 加强阴影效果 */
             font-family: 'MedievalSharp', cursive;
         }
 
@@ -186,7 +186,7 @@
             const cardDisplay = document.getElementById("cardDisplay");
             const isSpecial = rarity === "sr" || rarity === "ssr";
 
-            cardDisplay.innerHTML = `
+            cardDisplay.innerHTML = ` 
                 <img src="${image}" alt="${name}" class="${isSpecial ? 'special-effect-img' : ''}">
                 <h2 class="${rarity}">${name}</h2>
                 <p>稀有度：<span class="${rarity}">${rarity.toUpperCase()}</span></p>
