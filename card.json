@@ -2,57 +2,57 @@
     "ssr": [
         {
             "name": "SSR 卡牌 1",
-            "probability": 0.05
+            "probability": 0.08
         },
         {
             "name": "SSR 卡牌 2",
-            "probability": 0.03
+            "probability": 0.085
         },
         {
             "name": "SSR 卡牌 3",
-            "probability": 0.02
+            "probability": 0.085
         }
     ],
     "sr": [
         {
             "name": "SR 卡牌 1",
-            "probability": 0.5
+            "probability": 0.25
         },
         {
             "name": "SR 卡牌 2",
-            "probability": 0.3
+            "probability": 0.25
         },
         {
             "name": "SR 卡牌 3",
-            "probability": 0.2
+            "probability": 0.25
         }
     ],
     "hr": [
         {
             "name": "HR 卡牌 1",
-            "probability": 2
+            "probability": 3
         },
         {
             "name": "HR 卡牌 2",
-            "probability": 1.5
+            "probability": 3
         },
         {
             "name": "HR 卡牌 3",
-            "probability": 1.5
+            "probability": 3
         }
     ],
     "other": [
         {
             "name": "普通卡牌 1",
-            "probability": 31.3
+            "probability": 30
         },
         {
             "name": "普通卡牌 2",
-            "probability": 31.3
+            "probability": 30
         },
         {
             "name": "普通卡牌 3",
-            "probability": 31.3
+            "probability": 30
         }
     ]
 }
